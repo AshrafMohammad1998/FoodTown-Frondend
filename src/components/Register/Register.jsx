@@ -1,8 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import configVariables from "../../configurations/config";
+import "./register.css"
 
 function Register() {
+  
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [mobile, setMobile] = useState("")
@@ -38,9 +40,7 @@ function Register() {
         e.preventDefault()
 
         const isFormValid = validateForm()
-
         if(!isFormValid) return
-        console.log("abcccc")
         // if (!validateForm()) return;
 
         const body = {
@@ -51,24 +51,20 @@ function Register() {
         }
         
         try{
-            const response = await axios.post(`${configVariables.ipAddress}/users/registerUser`, body)
-            console.log(response)
-            
+            const response = await axios.post(`${configVariables.ipAddress}/users/registerUser`, body)          
 
         } catch (error) {
             console.log("Error while register:", error)
             if (error.response.status > 201){
-                console.log(error.response.data.message)
                 setServerError(true)
                 setServerErrorMessage(error.response.data.message)
             }
-            
         }
     }
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="relative border flex flex-col border-blue-500 rounded-lg p-3 w-4/12">
+    <div className="flex items-center justify-center min-h-screen bg-image" >
+      <div className="relative flex flex-col p-3 w-4/12">
         <div className="absolute self-center -top-16">
           <img src="/image1.jpeg" alt="" className="h-32 w-32 rounded-full " />
         </div>
@@ -138,10 +134,10 @@ function Register() {
             />
             {formErrors.confirmPassword && <span className="text-red-500 text-xs md:text-sm">*Password doesn't match</span>}
           </div>
-          {serverError&& <p>{serverErrorMessage}</p>}
           <div className="pt-5">
             <button type="submit" className="w-full border rounded-full border-slate-500 p-3">Register</button>
           </div>
+          {serverError&& <p className="text-red-500 text-sm md:text-md text-center">{serverErrorMessage}</p>}
         </form>
       </div>
     </div>

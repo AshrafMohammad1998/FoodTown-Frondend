@@ -32,8 +32,11 @@ function Login() {
 
   }
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="relative flex justify-center border border-blue-500 rounded-lg p-3 min-h-96 min-w-96">
+    <div 
+      className="flex items-center justify-center h-screen bg-cover bg-center bg-no-repeat bg-overlay"
+      style={{ backgroundImage: "url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}
+    >
+      <div className="relative flex justify-center border border-slate-500 rounded-2xl p-3 min-h-96 min-w-96 shadow-2xl">
         <div className="absolute -top-16 flex flex-col space-y-2">
           <div className="flex items-center justify-center">
             <img
@@ -74,8 +77,8 @@ function Login() {
                 placeholder="Enter your password"
               />
             </div>
-            <div className="pt-5">
-              <button type="submit" className="p-2 text-center border w-full">Login</button>
+            <div className="pt-5 text-center">
+              <button type="submit" className="p-2 text-center border border-slate-800 w-1/2 rounded-full">Login</button>
             </div>
           </form>
         </div>
