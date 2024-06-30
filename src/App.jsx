@@ -4,8 +4,8 @@ import Register from "./components/Register/Register"
 function App() {
 
   return (
-    <div className="overflow-y-auto">
-      {/* <Login /> */}
+    <div>
+      <Login />
       <Register />
     </div>
   )
