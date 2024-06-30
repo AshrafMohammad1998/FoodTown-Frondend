@@ -24,6 +24,7 @@ function Login() {
       console.log(response, "register response")
       if(response.status === 200){
         setShowWelcome(true)
+        
       }
     } catch (error) {
       console.log("Error while logging in", error)
