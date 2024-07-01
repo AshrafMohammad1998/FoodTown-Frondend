@@ -1,16 +1,17 @@
-import Login from "./components/Login"
-import Register from "./components/Register/Register"
-import Test from "./components/Test"
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
+import { Outlet } from "react-router-dom";
+
+import "./App.css";
 
 function App() {
-
   return (
     <div>
-      <Login />
-      {/* <Register /> */}
-      {/* <Test /> */}
+      <Header />
+      <Outlet />
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
