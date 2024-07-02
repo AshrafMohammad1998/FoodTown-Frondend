@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import configVariables from "../../configurations/config";
+import {Link, useNavigate } from "react-router-dom";
 
 function Register() {
+
+    const navigate = useNavigate();
   
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -51,7 +54,9 @@ function Register() {
         
         try{
             const response = await axios.post(`${configVariables.ipAddress}/users/registerUser`, body)          
-
+            if (response.status === 201){
+              navigate("/login")
+            }
         } catch (error) {
             console.log("Error while register:", error)
             if (error.response.status > 201){
@@ -80,6 +85,7 @@ function Register() {
                 placeholder="Full name"
                 id="name"
                 type="text"
+                value={name}
                 className="p-2 w-full border border-slate-500 rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -93,8 +99,9 @@ function Register() {
                 placeholder="example@example.com"
                 id="email"
                 type="email"
+                value={email}
                 className="p-2 w-full border border-slate-500 rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
               {formErrors.email && <span className="text-red-500 text-xs md:text-sm">*Email is mandatory</span>}
             </div>
@@ -106,6 +113,7 @@ function Register() {
                 placeholder="Mobile number"
                 id="mobile"
                 type="number"
+                value={mobile}
                 className="p-2 w-full border border-slate-500 rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm no-spinner"
                 onChange={(e) => setMobile(e.target.value)}
               />
@@ -119,6 +127,7 @@ function Register() {
                 placeholder="Set your password"
                 id="password"
                 type="password"
+                value={password}
                 className="p-2 w-full border border-slate-500 rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm"
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -132,15 +141,18 @@ function Register() {
                 placeholder="Confirm your password"
                 id="confirm-password"
                 type="password"
+                value={confirmPassword}
                 className="p-2 w-full border border-slate-500 rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm"
                 onChange={(e) => setConfirmPassword(e.target.value)}
               />
-              {formErrors.confirmPassword && <span className="text-red-500 text-xs md:text-sm">*Password doesn't match</span>}
+              {formErrors.confirmPassword && <span className="text-red-500 text-xs md:text-sm ">*Password doesn't match</span>}
             </div>
+            <Link className="text-blue-800 text-sm underline pt-2 pl-1" to="/login">Login</Link>
+            {serverError&& <p className="text-red-500 text-sm md:text-md py-0">{serverErrorMessage}</p>}
             <div className="py-3 text-center">
               <button type="submit" className="w-1/2 border rounded-full border-slate-500 p-3">Register</button>
             </div>
-            {serverError&& <p className="text-red-500 text-sm md:text-md text-center">{serverErrorMessage}</p>}
+            
           </form>
         </div>
       </div>
