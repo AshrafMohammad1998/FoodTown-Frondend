@@ -1,10 +1,11 @@
 import React from "react";
-import navImage from "/navLogo.png";
+import navImage from "../../../public/navLogo.png";
 import FoodBankOutlinedIcon from "@mui/icons-material/FoodBankOutlined";
 import HouseOutlinedIcon from "@mui/icons-material/HouseOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ContactMailOutlinedIcon from "@mui/icons-material/ContactMailOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import Dropdown from "@mui/joy/Dropdown";
 import MenuButton from "@mui/joy/MenuButton";
 import Menu from "@mui/joy/Menu";
@@ -14,49 +15,69 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import configVariables from "../../configurations/config";
 import Cookies from "js-cookie";
+import ThemeToggleButton from "./ThemeToggleButton";
+import { useSelector } from "react-redux";
 
 function Header() {
-
+  
   const navigate = useNavigate();
-  const jwtToken = Cookies.get("jwtToken")
+  const jwtToken = Cookies.get("jwtToken");
+  const uiTheme = useSelector((state) => state.uiTheme.theme);
+  const iconColor = uiTheme === "dark" ? "white" : "black";
 
   const handleLogout = async () => {
-    try{
-      const response = await axios.post(`${configVariables.ipAddress}/users/logout`)
-      console.log(response, "logout checking response")
+    try {
+      const response = await axios.post(
+        `${configVariables.ipAddress}/users/logout`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        Cookies.remove("jwtToken");
+        navigate("/login");
+      }
+
+      console.log(response, "logout response");
     } catch (error) {
-      console.log("User logout :: Error: ", error)
+      console.log("User logout :: Error: ", error);
     }
-    // navigate("/login")
-  }
+  };
+
   return (
-    <div className="min-w-screen mt-4 sticky top-0 bg-white z-20 mb-4">
-      <nav className="flex items-center justify-between md:w-3/4 m-auto border border-slate-500 rounded-2xl text-sans w-11/12 bg-white">
+    <div className="min-w-screen sticky top-0 z-20 mb-4 bg-white dark:bg-slate-800">
+      <nav className="flex items-center justify-between md:w-4/5 m-auto border border-slate-500 rounded-2xl text-sans w-11/12 bg-white dark:bg-slate-800 ">
         <img src={navImage} alt="" className="h-12 w-40 -ml-3" />
-        <ul className="flex items-center space-x-6 hidden sm:flex">
+        <ul className="items-center space-x-6 hidden sm:flex">
           <li className="flex items-center space-x-1">
             <span className="mb-1">
               <HouseOutlinedIcon fontSize="small" />
             </span>
-            <span className="sm:hidden md:inline">Home</span>
+            <span className="sm:hidden lg:inline">Home</span>
           </li>
           <li className="flex items-center space-x-1">
             <span className="mb-1">
-              <FoodBankOutlinedIcon fontSize="small" />
+              <LocalMallOutlinedIcon fontSize="small" />
             </span>
-            <span className="sm:hidden md:inline">Bag</span>
+            <span className="sm:hidden lg:inline">Bag</span>
           </li>
           <li className="flex items-center space-x-1">
             <span className="mb-1">
               <FavoriteBorderOutlinedIcon fontSize="small" />
             </span>
-            <span className="sm:hidden md:inline">Wishlist</span>
+            <span className="sm:hidden lg:inline">Wishlist</span>
           </li>
           <li className="flex items-center space-x-1">
             <span className="mb-1">
               <ContactMailOutlinedIcon fontSize="small" />
             </span>
-            <span className="sm:hidden md:inline">Contact Us</span>
+            <span className="sm:hidden lg:inline">Contact Us</span>
           </li>
         </ul>
         {/* <p className="flex items-center space-x-1 mr-4">
@@ -65,43 +86,42 @@ function Header() {
           </span>
           <span>Account</span>
         </p> */}
+        <div className="flex items-center justify-around md:w-2/6 lg:w-1/4 space-x-4">
+          <ThemeToggleButton />
           <Dropdown>
-            <MenuButton sx={{ minWidth: 60, padding: '2px' }} style={{marginRight: "10px"}}  endDecorator={<ArrowDropDown style={{ marginLeft: '-5px' }} />}>
-              <AccountCircleOutlinedIcon fontSize="small" />
+            <MenuButton
+              sx={{ minWidth: 60, padding: "2px", color:iconColor }}
+              style={{ marginRight: "10px" }}
+              endDecorator={
+                <ArrowDropDown
+                  style={{ marginLeft: "-5px", color:iconColor }}
+                />
+              }
+            >
+              <AccountCircleOutlinedIcon
+                fontSize="small"
+                sx={{ color: iconColor }}
+              />
             </MenuButton>
-            <Menu placement="bottom-end" sx={{ minWidth: 120, "--ListItemDecorator-size": "24px" }}>
+            <Menu
+              placement="bottom-end"
+              sx={{ minWidth: 120, "--ListItemDecorator-size": "24px", backgroundColor:`${uiTheme === "dark" ? "#1e293b": "white"}`,  }}
+            >
               <MenuItem
-              // onClick={() => {
-              //   const nextIndex = SIZES.indexOf(size) - 1;
-              //   const value = nextIndex < 0 ? SIZES[SIZES.length - 1] : SIZES[nextIndex];
-              //   setSize(value);
-              // }}
-              onClick={()=>{
-                handleLogout()
-              }}
+                sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}
+                onClick={() => {
+                  handleLogout();
+                }}
+                className="bg-red-500"
               >
+                
                 Logout
               </MenuItem>
-              <MenuItem
-              // onClick={() => {
-              //   const nextIndex = SIZES.indexOf(size) + 1;
-              //   const value = nextIndex > SIZES.length - 1 ? SIZES[0] : SIZES[nextIndex];
-              //   setSize(value);
-              // }}
-              >
-                Edit
-              </MenuItem>
-              <MenuItem
-              // onClick={() => {
-              //   const nextIndex = SIZES.indexOf(size) + 1;
-              //   const value = nextIndex > SIZES.length - 1 ? SIZES[0] : SIZES[nextIndex];
-              //   setSize(value);
-              // }}
-              >
-                Help
-              </MenuItem>
+              <MenuItem sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}>Edit</MenuItem>
+              <MenuItem sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}>Help</MenuItem>
             </Menu>
           </Dropdown>
+        </div>
       </nav>
     </div>
   );

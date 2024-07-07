@@ -3,7 +3,9 @@ import axios from "axios";
 import navImage from "/image1.jpeg";
 import configVariables from "../configurations/config";
 import Cookies from "js-cookie";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
+import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
+import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 
 function Login() {
   const [emailOrMobile, setEmailOrMobile] = useState("");
@@ -11,6 +13,10 @@ function Login() {
 
   const [serverError, setServerError] = useState(false);
   const [serverErrorMessage, setServerErrorMessage] = useState("");
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const jwtToken = Cookies.get("jwtToken")
 
   const handleEmailOrMobileChange = (event) =>
     setEmailOrMobile(event.target.value.toLowerCase());
@@ -52,7 +58,7 @@ function Login() {
 
       if (response.status === 200) {
         const resCookie = Cookies.get("accessToken");
-        console.log(e, "resCookie");
+        
         Cookies.set("jwtToken", response.data.data.accessToken);
         navigate("/");
       } else {
@@ -66,9 +72,15 @@ function Login() {
       }
     }
   };
+
+  const handleShowPassword = () => setShowPassword(!showPassword);
+
+  if (jwtToken){
+    return <Navigate to="/" />
+  }
   return (
     <div
-      className="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat bg-overlay"
+      className="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat bg-overlay -mt-6"
       style={{
         backgroundImage:
           "url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
@@ -85,10 +97,12 @@ function Login() {
               />
             </div>
 
-            <form className="space-y-2" onSubmit={handleLogin}>
+            <form className="space-y-2 font-sans" onSubmit={handleLogin}>
               <div className="space-y-2">
                 <label
-                  className="text-black font-sans text-xl font-bold"
+                  className={`${
+                    formError.emailOrMobileError ? "text-red-500" : "text-black"
+                  } text-xl font-bold`}
                   htmlFor="email"
                 >
                   Email/Mobile
@@ -109,19 +123,37 @@ function Login() {
               )}
               <div className="space-y-2">
                 <label
-                  className="text-black font-sans text-xl font-bold"
+                  className={`${
+                    formError.passwordError ? "text-red-500" : "text-black"
+                  } text-xl font-bold`}
                   htmlFor="password"
                 >
                   Password
                 </label>
-                <input
-                  value={password}
-                  onChange={handlePassword}
-                  type="password"
-                  className="w-full p-2 text-black border border-slate-800 rounded-lg focus:outline-none m-y-2"
-                  id="password"
-                  placeholder="Enter your password"
-                />
+                <div className="relative flex items-center">
+                  <input
+                    onChange={handlePassword}
+                    value={password}
+                    type={showPassword ? "text" : "password"}
+                    className={`w-full p-2 text-black border ${
+                      formError.passwordError
+                        ? "border-red-500"
+                        : "border-slate-800"
+                    } rounded-lg focus:outline-none m-y-2`}
+                    id="password"
+                    placeholder="Enter your password"
+                  />
+                  <div
+                    className="absolute right-2 cursor-pointer"
+                    onClick={handleShowPassword}
+                  >
+                    {showPassword ? (
+                      <VisibilityOffRoundedIcon sx={{ color: "black" }} />
+                    ) : (
+                      <VisibilityRoundedIcon sx={{ color: "black" }} />
+                    )}
+                  </div>
+                </div>
               </div>
               {formError.passwordError && (
                 <span className="text-red-500 text-xs md:text-sm">
@@ -129,22 +161,25 @@ function Login() {
                 </span>
               )}
               <br />
-              <Link
-                className="text-blue-800 text-sm underline pt-2 pl-1"
-                to="/register"
-              >
-                Register
-              </Link>
               {serverError&& <p className="text-red-500 text-sm md:text-md py-0">{serverErrorMessage}</p>}
-              <div className="pt-3 text-center">
+              <div className="text-center">
                 <button
                   type="submit"
-                  className="p-2 text-center border border-slate-800 w-1/2 rounded-full"
+                   className="p-2 text-center border border-slate-800 w-1/2 rounded-full text-black"
                 >
                   Login
                 </button>
               </div>
             </form>
+            <p className="font-sans text-sm sm:text-base text-black">
+              <span>New to FOOD TOWN? </span>
+              <Link
+                className="text-blue-800 underline pt-2 pl-1"
+                to="/register"
+              >
+                Create an account
+              </Link>
+            </p>
           </div>
         </div>
       </div>
