@@ -16,10 +16,12 @@ import axios from "axios";
 import configVariables from "../../configurations/config";
 import Cookies from "js-cookie";
 import ThemeToggleButton from "./ThemeToggleButton";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {logout} from "../../store/userSlice"
 
 function Header() {
   
+  const dispatch = useDispatch()
   const navigate = useNavigate();
   const jwtToken = Cookies.get("jwtToken");
   const uiTheme = useSelector((state) => state.uiTheme.theme);
@@ -41,10 +43,10 @@ function Header() {
 
       if (response.status === 200) {
         Cookies.remove("jwtToken");
+        Cookies.remove("userId")
+        dispatch(logout())
         navigate("/login");
       }
-
-      console.log(response, "logout response");
     } catch (error) {
       console.log("User logout :: Error: ", error);
     }

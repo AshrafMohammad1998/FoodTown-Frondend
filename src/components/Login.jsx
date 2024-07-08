@@ -57,9 +57,8 @@ function Login() {
       );
 
       if (response.status === 200) {
-        const resCookie = Cookies.get("accessToken");
-        
-        Cookies.set("jwtToken", response.data.data.accessToken);
+        Cookies.set("jwtToken", response.data.data.accessToken, {expires: 1});
+        Cookies.set("userId", response.data.data.loggedInUser._id, {expires: 1})
         navigate("/");
       } else {
         console.log("Error");
