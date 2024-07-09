@@ -1,94 +1,177 @@
 import axios from "axios";
 import React, { useState } from "react";
 import configVariables from "../../configurations/config";
-import {Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import OtpInput from "../utilities/OtpInput";
 
 function Register() {
+  const jwtToken = Cookies.get("jwtToken");
 
-    const jwtToken = Cookies.get("jwtToken")
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
-  
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
-    const [mobile, setMobile] = useState("")
-    const [password, setPassword] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const [serverError, setServerError] = useState(false)
-    const [serverErrorMessage, setServerErrorMessage] = useState("")
+  const [serverError, setServerError] = useState(false);
+  const [serverErrorMessage, setServerErrorMessage] = useState("");
 
-    const [formErrors, setFormErrors] = useState({
-        name: false,
-        mobile: false,
-        email: false,
-        password: false,
-        confirmPassword: false,
-    });
+  const [showOTPInput, setShowOTPInput] = useState(false);
+  const [showOTPError, setShowOTPError] = useState(false);
+  const [genOtp, setGenOtp] = useState("");
 
-    const validateForm = () => {
-        const errors = {};
-    
-        if (!name) errors.name = true;
-        if (!mobile) errors.mobile = true;
-        if (!email) errors.email = true;
-        if (!password) errors.password = true;
-        if (password !== confirmPassword) errors.confirmPassword = true;
-    
-        setFormErrors(errors);
-    
-        return Object.keys(errors).length === 0;
+  const [formErrors, setFormErrors] = useState({
+    name: false,
+    mobile: false,
+    email: false,
+    password: false,
+    confirmPassword: false,
+  });
+
+  const validateForm = () => {
+    const errors = {};
+
+    if (!name) errors.name = true;
+    if (!mobile) errors.mobile = true;
+    if (!email) errors.email = true;
+    if (!password) errors.password = true;
+    if (password !== confirmPassword) errors.confirmPassword = true;
+
+    setFormErrors(errors);
+
+    return Object.keys(errors).length === 0;
+  };
+
+  const generateOTP = () => {
+    const max = 9000;
+    const min = 1000;
+
+    const otp = Math.floor(Math.random() * max) + min;
+    setGenOtp(otp);
+    return otp;
+  };
+
+  const handleEmailOtp = async () => {
+    const isFormValid = validateForm();
+    if (!isFormValid) return;
+    // if (!validateForm()) return;
+
+    const emailOTP = generateOTP();
+    try {
+      const body = {
+        emailOTP,
+        email,
+        username: name,
+        otpFor: "email verification",
+      };
+
+      const sendEmailOtpResponse = await axios.post(
+        `${configVariables.ipAddress}/users/emailotp`,
+        body
+      );
+      console.log(sendEmailOtpResponse, "Otp response");
+      if (sendEmailOtpResponse.status === 200) {
+        toast.success("OTP sent to email", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        setShowOTPInput(true);
+      }
+    } catch (error) {
+      console.log("error while sending otp through email", error);
+    }
+  };
+
+  const handleOtpSubmit = (userEnteredOtp) => {
+    if (parseInt(userEnteredOtp) !== genOtp) {
+      setShowOTPError(true);
+    } else {
+      setShowOTPError(false);
+    }
+  };
+
+  const handleRegistration = async (e) => {
+    e.preventDefault();
+
+    const body = {
+      name,
+      email,
+      mobile,
+      password,
     };
-    
-    const handleRegistration = async (e) => {
-        e.preventDefault()
 
-        const isFormValid = validateForm()
-        if(!isFormValid) return
-        // if (!validateForm()) return;
-
-        const body = {
-            name,
-            email,
-            mobile,
-            password
-        }
-        
-        try{
-            const response = await axios.post(`${configVariables.ipAddress}/users/registerUser`, body)          
-            if (response.status === 201){
-              navigate("/login")
-            }
-        } catch (error) {
-            console.log("Error while register:", error)
-            if (error.response.status > 201){
-                setServerError(true)
-                setServerErrorMessage(error.response.data.message)
-            }
-        }
+    try {
+      const response = await axios.post(
+        `${configVariables.ipAddress}/users/registerUser`,
+        body
+      );
+      if (response.status === 201) {
+        toast.success("User Registerd Successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      }
+    } catch (error) {
+      console.log("Error while register:", error);
+      if (error.response.status > 201) {
+        setServerError(true);
+        setServerErrorMessage(error.response.data.message);
+      }
     }
+  };
 
-    if(jwtToken){
-      return <Navigate to="/" />
-    }
+  if (jwtToken) {
+    return <Navigate to="/" />;
+  }
 
   return (
-    <div 
+    <div
       className="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat bg-overlay -mt-6"
-      style={{ backgroundImage: "url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')" }}
+      style={{
+        backgroundImage:
+          "url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
+      }}
     >
+      <ToastContainer />
       <div className="flex items-center justify-center min-h-screen pb-24">
         <div className="relative flex flex-col p-3 w-96 border border-slate-500 rounded-2xl shadow-2xl mt-36">
           <div className="absolute self-center -top-16">
-            <img src="/image1.jpeg" alt="" className="h-32 w-32 rounded-full " />
+            <img
+              src="/image1.jpeg"
+              alt=""
+              className="h-32 w-32 rounded-full "
+            />
           </div>
-          <form className="mt-16 text-sans space-y-3" onSubmit={handleRegistration}>
+          <form
+            className="mt-16 text-sans space-y-3"
+            onSubmit={handleRegistration}
+          >
             <div className="space-y-1">
               <label
                 className={`${
@@ -99,7 +182,6 @@ function Register() {
                 Name
               </label>
               <input
-
                 placeholder="Full name"
                 id="name"
                 type="text"
@@ -109,10 +191,14 @@ function Register() {
                 }`}
                 onChange={(e) => setName(e.target.value)}
               />
-              {formErrors.name && <span className="text-red-500 text-xs md:text-sm">*Name is mandatory</span>}
+              {formErrors.name && (
+                <span className="text-red-500 text-xs md:text-sm">
+                  *Name is mandatory
+                </span>
+              )}
             </div>
             <div className="space-y-1">
-            <label
+              <label
                 className={`${
                   formErrors.email ? "text-red-500" : "text-black"
                 } text-md font-bold`}
@@ -130,10 +216,14 @@ function Register() {
                 }`}
                 onChange={(e) => setEmail(e.target.value.toLowerCase())}
               />
-              {formErrors.email && <span className="text-red-500 text-xs md:text-sm">*Email is mandatory</span>}
+              {formErrors.email && (
+                <span className="text-red-500 text-xs md:text-sm">
+                  *Email is mandatory
+                </span>
+              )}
             </div>
             <div className="space-y-1">
-            <label
+              <label
                 className={`${
                   formErrors.mobile ? "text-red-500" : "text-black"
                 } text-md font-bold`}
@@ -151,12 +241,19 @@ function Register() {
                 } rounded-xl focus: outline-none invalid:border-red-500 text-black text-sm no-spinner`}
                 onChange={(e) => setMobile(e.target.value)}
               />
-              {formErrors.mobile && <span className="text-red-500 text-xs md:text-sm">*Mobile number is mandatory</span>}
+              {formErrors.mobile && (
+                <span className="text-red-500 text-xs md:text-sm">
+                  *Mobile number is mandatory
+                </span>
+              )}
             </div>
             <div className="space-y-1">
-              <label className={`${
+              <label
+                className={`${
                   formErrors.password ? "text-red-500" : "text-black"
-                } text-md font-bold`} htmlFor="password">
+                } text-md font-bold`}
+                htmlFor="password"
+              >
                 Password
               </label>
               <div className="relative flex items-center">
@@ -181,12 +278,19 @@ function Register() {
                   )}
                 </div>
               </div>
-              {formErrors.password && <span className="text-red-500 text-xs md:text-sm">*Password is mandatory</span>}
+              {formErrors.password && (
+                <span className="text-red-500 text-xs md:text-sm">
+                  *Password is mandatory
+                </span>
+              )}
             </div>
             <div className="space-y-1">
-              <label className={`${
+              <label
+                className={`${
                   formErrors.confirmPassword ? "text-red-500" : "text-black"
-                } text-md font-bold`} htmlFor="confirm-password">
+                } text-md font-bold`}
+                htmlFor="confirm-password"
+              >
                 Confirm password
               </label>
               <div className="relative flex items-center">
@@ -213,13 +317,50 @@ function Register() {
                   )}
                 </div>
               </div>
-              {formErrors.confirmPassword && <span className="text-red-500 text-xs md:text-sm ">*Password doesn't match</span>}
+              {formErrors.confirmPassword && (
+                <span className="text-red-500 text-xs md:text-sm ">
+                  *Password doesn't match
+                </span>
+              )}
             </div>
-            {serverError&& <p className="text-red-500 text-sm md:text-md py-0">{serverErrorMessage}</p>}
-            <div className="py-3 text-center">
-              <button type="submit" className="w-1/2 border rounded-full border-slate-500 p-3 text-black">Register</button>
-            </div>
-            
+            {serverError && (
+              <p className="text-red-500 text-sm md:text-md py-0">
+                {serverErrorMessage}
+              </p>
+            )}
+            {!showOTPInput && (
+              <div className="pt-3 text-center">
+                <button
+                  type="button"
+                  className="w-1/2 border rounded-full border-slate-500 p-3 text-black disabled:cursor-not-allowed"
+                  onClick={handleEmailOtp}
+                  disabled={showOTPInput}
+                >
+                  Verify Email
+                </button>
+              </div>
+            )}
+            {showOTPInput && (
+              <>
+                <p className="text-sm text-black">
+                  Please enter OTP sent to <b>{email}</b>.
+                </p>
+                <OtpInput length={4} onOtpSubmit={handleOtpSubmit} />
+                {showOTPError && (
+                  <p className="text-red-500 text-xs">Incorrect OTP</p>
+                )}
+              </>
+            )}
+            {showOTPInput && (
+              <div className="py-3 text-center">
+                <button
+                  type="submit"
+                  className="w-1/2 border rounded-full border-slate-500 p-3 text-black"
+                >
+                  Verify OTP/Register
+                </button>
+              </div>
+            )}
           </form>
           <p className="font-sans text-sm sm:text-base text-black">
             <span>Already have an account? </span>
