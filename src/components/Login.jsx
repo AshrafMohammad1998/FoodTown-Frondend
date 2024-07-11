@@ -108,9 +108,9 @@ function Login() {
             "url('https://images.pexels.com/photos/1640774/pexels-photo-1640774.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2')",
         }}
       >
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="relative flex justify-center border border-slate-500 rounded-2xl p-3 min-h-96 min-w-96 shadow-2xl mt-36">
-            <div className="absolute -top-16 flex flex-col space-y-2">
+        <div className="flex items-center justify-center min-h-screen pb-24">
+          <div className="relative flex justify-center border border-slate-500 rounded-2xl p-3 min-h-[420px] min-w-96 shadow-2xl mt-36">
+            <div className="absolute -top-16 flex flex-col space-y-2 min-h-full">
               <div className="flex items-center justify-center">
                 <img
                   src={navImage}
@@ -206,6 +206,15 @@ function Login() {
                   to="/register"
                 >
                   Create an account
+                </Link>
+              </p>
+              <p className="font-sans text-sm sm:text-base text-black">
+                <span>Own a Restaurant? </span>
+                <Link
+                  className="text-blue-800 underline pt-2 pl-1"
+                  to="/partner-registration"
+                >
+                  Be our Partner
                 </Link>
               </p>
             </div>

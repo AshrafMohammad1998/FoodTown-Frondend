@@ -12,16 +12,17 @@ import configVariables from "./configurations/config";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const pathsToHide = ["/login", "/register"];
+  const pathsToHide = ["/login", "/register", "/partner-registration"];
   const hidingThePaths = pathsToHide.includes(location.pathname);
 
-  const userId = Cookies.get("userId")
-  const jwtToken = Cookies.get("jwtToken")
+  const userId = Cookies.get("userId");
+  const jwtToken = Cookies.get("jwtToken");
 
   useEffect(() => {
     const getUserData = async () => {
       try {
-        const response = await axios.get(`${configVariables.ipAddress}/users/getuser/${userId}`,
+        const response = await axios.get(
+          `${configVariables.ipAddress}/users/getuser/${userId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -29,20 +30,19 @@ function App() {
             },
             withCredentials: true,
           }
-        )
+        );
 
-        if (response.status === 200){
-          const userData = response.data.data
+        if (response.status === 200) {
+          const userData = response.data.data;
           dispatch(login(userData));
         }
       } catch (error) {
         console.log("Error while fetching userdata", error);
       }
     };
-    if (userId){
+    if (userId) {
       getUserData();
     }
-    
   });
 
   return (
