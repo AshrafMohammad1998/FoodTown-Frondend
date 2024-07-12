@@ -1,21 +1,18 @@
 import axios from "axios";
 import React, { useState } from "react";
 import configVariables from "../../configurations/config";
-import { Link, useNavigate, Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
 import VisibilityOffRoundedIcon from "@mui/icons-material/VisibilityOffRounded";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OtpInput from "../utilities/OtpInput";
-import StepperComp from "../StepperComp";
+import StepperComp from "../utilities/StepperComp";
 import RestaurantDetails from "./RestaurantDetails";
 import PartnerOTP from "./PartnerOTP";
 
 function PartnerRegister() {
   const jwtToken = Cookies.get("jwtToken");
-
-  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,10 +27,6 @@ function PartnerRegister() {
   const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const [showForm, setShowForm] = useState("owner");
-
-  const [showOTPInput, setShowOTPInput] = useState(false);
-  const [showOTPError, setShowOTPError] = useState(false);
-  const [genOtp, setGenOtp] = useState("");
 
   const [activeStep, setActiveStep] = useState(0);
 

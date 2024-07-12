@@ -16,10 +16,8 @@ import DialogContent from "@mui/joy/DialogContent";
 function PartnerOTP({ onBack, email, name, mobile, password }) {
   const [isInvalidOtp, setIsInvalidOtp] = useState(false);
   const [showOTP, setShowOTP] = useState(false);
-  const [serverError, setServerError] = useState(false);
   const [genOtp, setGenOtp] = useState("");
   const [isValidOtp, setIsValidOtp] = useState(false);
-  const [serverErrorMessage, setServerErrorMessage] = useState("");
 
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -61,21 +59,14 @@ function PartnerOTP({ onBack, email, name, mobile, password }) {
           theme: "light",
         });
 
-        setServerError(false);
         setShowOTP(true);
       }
     } catch (error) {
       console.log("error while sending otp through email", error);
-      if (error.response.status > 201) {
-        setServerError(true);
-        setServerErrorMessage(error.response.data.message);
-      }
     }
   };
 
   const handleOtpSubmit = (userEnteredOtp) => {
-    console.log("triggered submit otp", userEnteredOtp);
-    console.log("g otp", genOtp);
     if (parseInt(userEnteredOtp) !== genOtp) {
       setIsInvalidOtp(true);
       setIsValidOtp(false);
@@ -129,7 +120,6 @@ function PartnerOTP({ onBack, email, name, mobile, password }) {
         `${configVariables.ipAddress}/restaurants/registerRestaurant`,
         body
       );
-      console.log(response, "checking the restaurant data");
 
       if (response.status === 200) {
         localStorage.removeItem("restaurantData");

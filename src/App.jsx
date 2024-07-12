@@ -8,12 +8,19 @@ import Cookies from "js-cookie";
 import "./App.css";
 import axios from "axios";
 import configVariables from "./configurations/config";
+import PartnerHeader from "./components/Header/PartnerHeader";
+import PartnerFooter from "./components/Footer/PartnerFooter";
+import { loadRestaurantData } from "./store/restaurantSlice";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const pathsToHide = ["/login", "/register", "/partner-registration"];
   const hidingThePaths = pathsToHide.includes(location.pathname);
+
+  const showPartnerDetails = location.pathname.startsWith("/partner");
+
+  // console.log(location, "loaction");
 
   const userId = Cookies.get("userId");
   const jwtToken = Cookies.get("jwtToken");
@@ -35,21 +42,44 @@ function App() {
         if (response.status === 200) {
           const userData = response.data.data;
           dispatch(login(userData));
+
+          if (userData.isOwner) {
+            const restaurantResponse = await axios.get(
+              `${configVariables.ipAddress}/restaurants/getRestaurantData/${userId}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${jwtToken}`,
+                },
+                withCredentials: true,
+              }
+            );
+
+            if (restaurantResponse.status === 200) {
+              const restaurantData = restaurantResponse.data.data;
+              dispatch(loadRestaurantData(restaurantData));
+            }
+          }
         }
       } catch (error) {
         console.log("Error while fetching userdata", error);
       }
     };
+
     if (userId) {
       getUserData();
     }
-  });
+  }, [userId, jwtToken, dispatch]);
 
   return (
-    <div className="pt-6 bg-white dark:bg-slate-800 dark:text-white">
-      {!hidingThePaths && <Header />}
-      <Outlet />
-      {!hidingThePaths && <Footer />}
+    <div className="pt-6 bg-white dark:bg-slate-800 dark:text-white flex flex-col min-h-screen">
+      {!hidingThePaths && !showPartnerDetails && <Header />}
+      {showPartnerDetails && <PartnerHeader />}
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+      {showPartnerDetails && <PartnerFooter />}
+      {!hidingThePaths && !showPartnerDetails && <Footer />}
     </div>
   );
 }

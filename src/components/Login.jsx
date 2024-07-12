@@ -77,10 +77,20 @@ function Login() {
         Cookies.set("userId", response.data.data.loggedInUser._id, {
           expires: 1,
         });
+
+        console.log(response, "user login res");
+
+        const isOwner = response.data.data.loggedInUser.isOwner;
+
+        console.log(isOwner, "isOwner");
+
         setTimeout(() => {
-          navigate("/");
+          if (isOwner) {
+            navigate("/partner-menu");
+          } else {
+            navigate("/");
+          }
         }, 1000);
-        
       } else {
         console.log("Error");
       }

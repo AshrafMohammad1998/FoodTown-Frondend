@@ -82,7 +82,7 @@ function Register() {
         `${configVariables.ipAddress}/users/emailotp`,
         body
       );
-      console.log(sendEmailOtpResponse, "Otp response");
+
       if (sendEmailOtpResponse.status === 200) {
         toast.success("OTP sent to email", {
           position: "top-right",
