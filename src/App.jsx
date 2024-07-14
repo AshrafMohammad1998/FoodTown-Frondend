@@ -18,7 +18,7 @@ function App() {
   const pathsToHide = ["/login", "/register", "/partner-registration"];
   const hidingThePaths = pathsToHide.includes(location.pathname);
 
-  const showPartnerDetails = location.pathname.startsWith("/partner");
+  const showPartnerHeaderFooter = location.pathname.startsWith("/partner");
 
   // console.log(location, "loaction");
 
@@ -73,13 +73,13 @@ function App() {
 
   return (
     <div className="pt-6 bg-white dark:bg-slate-800 dark:text-white flex flex-col min-h-screen">
-      {!hidingThePaths && !showPartnerDetails && <Header />}
-      {showPartnerDetails && <PartnerHeader />}
+      {!hidingThePaths && !showPartnerHeaderFooter && <Header />}
+      {showPartnerHeaderFooter && jwtToken && <PartnerHeader />}
       <main className="flex-grow">
         <Outlet />
       </main>
-      {showPartnerDetails && <PartnerFooter />}
-      {!hidingThePaths && !showPartnerDetails && <Footer />}
+      {showPartnerHeaderFooter && jwtToken && <PartnerFooter />}
+      {!hidingThePaths && !showPartnerHeaderFooter && <Footer />}
     </div>
   );
 }

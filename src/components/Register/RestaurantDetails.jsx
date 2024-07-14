@@ -57,11 +57,12 @@ function RestaurantDetails({ onBack, onNext }) {
     toTimeError: false,
     addressError: false,
     foodTypesError: false,
+    imageUrlError: false
   });
 
   console.log(restaurantFormError);
 
-  const checkFormErrors = () => {
+  const checkFormErrors = (validationFor) => {
     let errors = {};
     if (!restaurantName) errors.restaurantNameError = true;
     if (!fromTime) errors.fromTimeError = true;
@@ -69,6 +70,7 @@ function RestaurantDetails({ onBack, onNext }) {
     if (!restaurantAddress) errors.addressError = true;
     if (!selectedFoodTypes.length) errors.foodTypesError = true;
 
+    if (validationFor === "next" && !restaurantImgUrl) errors.imageUrlError = true
     setRestaurantFormError(errors);
     return Object.keys(errors).length === 0;
   };
@@ -77,8 +79,7 @@ function RestaurantDetails({ onBack, onNext }) {
     e.preventDefault();
     setServerError(false);
 
-
-    const isFormErrors = checkFormErrors();
+    const isFormErrors = checkFormErrors("next");
     if (!isFormErrors) return;
 
     try {
@@ -122,15 +123,16 @@ function RestaurantDetails({ onBack, onNext }) {
   };
 
   const handleImgClick = () => {
-    setShowNextButton(false);
-    const isFormErrors = checkFormErrors();
+    const isFormErrors = checkFormErrors("image");
+    console.log(isFormErrors, "form img validations")
     if (!isFormErrors) return;
 
     imgRef.current.click();
   };
 
   const handleImgChange = async (event) => {
-    setServerError(false);
+    setShowNextButton(false);
+    setServerError(false)
 
     const imgFile = event.target.files[0];
 
@@ -144,8 +146,6 @@ function RestaurantDetails({ onBack, onNext }) {
         formData
       );
 
-      console.log(response, "upload img res");
-
       if (response.status === 200) {
         setRestaurantImgPublicId(response.data.data.public_id);
         setRestaurantImgUrl(response.data.data.url);
@@ -153,7 +153,7 @@ function RestaurantDetails({ onBack, onNext }) {
       }
     } catch (error) {
       console.log("Uploading restaurant image :: Error ", error);
-      setServerError(true);
+      setServerError(true)
       setServerErrorMessage(error.response.data.message);
     }
   };
@@ -290,6 +290,11 @@ function RestaurantDetails({ onBack, onNext }) {
               >
                 Upload Restaurant Image/Logo
               </button>
+              {restaurantFormError.imageUrlError && (
+                <span className="text-red-600 text-xs md:text-sm">
+                  *Restaurant image is mandatory.
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -333,10 +338,10 @@ function RestaurantDetails({ onBack, onNext }) {
           </div>
         </div>
         {serverError && (
-            <p className="w-full text-red-500 text-sm md:text-md pb-2 text-center">
-              {serverErrorMessage}
-            </p>
-          )}
+          <p className="w-full text-red-500 text-sm md:text-md pb-2 text-center">
+            {serverErrorMessage}
+          </p>
+        )}
         <div className="flex justify-between w-full">
           <div className="w-1/2">
             <button

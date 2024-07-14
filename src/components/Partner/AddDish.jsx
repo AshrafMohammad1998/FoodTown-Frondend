@@ -158,12 +158,12 @@ function AddDish() {
   return (
     <div className="px-10 pb-8 mb-12 sm:mb-0 flex justify-center  min-w-fit">
       <ToastContainer />
-      <div className="border border-slate-500 rounded-2xl shadow-xl p-5 w-4/5 md:h-3/4 md:w-3/4">
-        <form className="flex flex-col md:flex-row" onSubmit={handleAddDish}>
+      <div className="border border-slate-500 rounded-2xl shadow-xl p-5 w-4/5 md:h-3/4 md:w-3/4 ">
+        <form className="flex flex-col md:flex-row text-black dark:text-white" onSubmit={handleAddDish}>
           <div className="w-full md:w-1/2">
             <div className="space-y-1">
               <label
-                className="text-black text-md font-bold"
+                className=" text-md font-bold "
                 htmlFor="dishName"
               >
                 Dish name
@@ -173,7 +173,7 @@ function AddDish() {
                 id="dishName"
                 type="text"
                 value={dishName}
-                className="p-2 w-full border rounded-xl focus:outline-none border-slate-500 text-black text-sm"
+                className="p-2 w-full rounded-xl text-sm focus:outline-none bg-gray-50 border border-slate-500  focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 onChange={(e) => setDishName(e.target.value)}
               />
               {handleFormErrors.dishNameError && (
@@ -183,7 +183,7 @@ function AddDish() {
               )}
             </div>
             <div className="space-y-1">
-              <label className="text-black text-md font-bold" htmlFor="amount">
+              <label className="text-md font-bold" htmlFor="amount">
                 Amount
               </label>
               <input
@@ -191,7 +191,7 @@ function AddDish() {
                 id="amount"
                 type="number"
                 value={dishAmount}
-                className="p-2 w-full border rounded-xl focus:outline-none border-slate-500 text-black text-sm no-spinner"
+                className="p-2 w-full rounded-xl    text-sm focus:outline-none bg-gray-50 border border-slate-500  focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 no-spinner"
                 onChange={(e) => setDishAmount(e.target.value)}
               />
               {handleFormErrors.dishAmountError && (
@@ -201,7 +201,7 @@ function AddDish() {
               )}
             </div>
             <div className="space-y-1">
-              <label className="text-black text-md font-bold">Type</label>
+              <label className="text-md font-bold">Type</label>
               <div className="flex">
                 <div className="flex items-center">
                   <input
@@ -213,7 +213,7 @@ function AddDish() {
                     onChange={handleDishTypeChange}
                     className="p-2 border rounded-xl focus:outline-none border-slate-500 text-black text-sm no-spinner"
                   />
-                  <label htmlFor="veg" className="ml-2 text-black text-sm">
+                  <label htmlFor="veg" className="ml-2 text-sm">
                     Veg
                   </label>
                 </div>
@@ -227,7 +227,7 @@ function AddDish() {
                     onChange={handleDishTypeChange}
                     className="p-2 border rounded-xl focus:outline-none border-slate-500 text-black text-sm no-spinner"
                   />
-                  <label htmlFor="non-veg" className="ml-2 text-black text-sm">
+                  <label htmlFor="non-veg" className="ml-2 text-sm">
                     Non-Veg
                   </label>
                 </div>
@@ -236,7 +236,7 @@ function AddDish() {
             <div className="space-y-1">
               <label
                 htmlFor="description"
-                className="text-black text-md font-bold"
+                className="text-md font-bold"
               >
                 Description
               </label>
@@ -245,7 +245,7 @@ function AddDish() {
                 rows={5}
                 value={dishDescription}
                 id="description"
-                className="p-2 w-full border rounded-xl border-slate-500 text-black text-sm focus:outline-none"
+                className="p-2 w-full rounded-xl    text-sm focus:outline-none bg-gray-50 border border-slate-500  focus:ring-blue-500 focus:border-blue-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
             </div>
             {handleFormErrors.dishDescriptionError && (
@@ -272,7 +272,7 @@ function AddDish() {
                     src={producttImgUrl}
                     className="h-36 w-36 rounded-xl disabled:cursor-not-allowed border border-slate-500 shadow-2xl"
                   />
-                  <p className="absolute px-1 bg-black text-white text-sm border border-slate-500 rounded-lg bottom-2 right-2">
+                  <p className="absolute px-1 bg-black text-white dark:bg-white dark:text-black text-sm border border-slate-500 rounded-lg bottom-2 right-2">
                     <ModeTwoToneIcon />
                   </p>
                 </div>
@@ -281,7 +281,7 @@ function AddDish() {
                 <button
                   type="button"
                   // onClick={handleImgClick}
-                  className="h-36 w-36 border rounded-xl border-slate-500 flex items-center justify-center text-black disabled:cursor-not-allowed text-4xl"
+                  className="h-36 w-36 border rounded-xl border-slate-500 flex items-center justify-center disabled:cursor-not-allowed text-4xl"
                 >
                   <span>
                     <span>+</span>
@@ -299,7 +299,7 @@ function AddDish() {
             {showDishButton && (
               <div className="flex items-center justify-center md:mt-10">
                 <button
-                  className="text-black rounded-lg border border-slate-500 px-4 py-2"
+                  className="rounded-lg border border-slate-500 px-4 py-2"
                   type="submit"
                 >
                   Add Dish
