@@ -10,7 +10,7 @@ import App from "./App.jsx";
 import "./index.css";
 import Login from "./components/Login.jsx";
 import Register from "./components/Register/Register.jsx";
-import Home from "./components/Home/Home.jsx";
+import Home from "./components/User/Home.jsx";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 import NotFound from "./components/NotFound/NotFound.jsx";
 import store from "./store/store.js";
@@ -18,8 +18,12 @@ import { Provider } from "react-redux";
 import PartnerRegister from "./components/Register/PartnerRegister.jsx";
 import StepperComp from "./components/utilities/StepperComp.jsx";
 import Menu from "./components/Partner/Menu.jsx";
+import Bag from "./components/User/Bag.jsx";
+import Wishlist from "./components/User/Wishlist.jsx";
+import ContactUs from "./components/User/ContactUs.jsx";
 import AddDish from "./components/Partner/AddDish.jsx";
 import PartnerOrders from "./components/Partner/PartnerOrders.jsx";
+import Restaurant from "./components/Restaurant/Restaurant.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +33,42 @@ const router = createBrowserRouter(
         element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="bag"
+        element={
+          <ProtectedRoute>
+            <Bag />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="wishlist"
+        element={
+          <ProtectedRoute>
+            <Wishlist />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="contact-us"
+        element={
+          <ProtectedRoute>
+            <ContactUs />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/restaurants/:restaurantId"
+        element={
+          <ProtectedRoute>
+            <Restaurant />
           </ProtectedRoute>
         }
       />
@@ -63,7 +103,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="partner-registration" element={<PartnerRegister />} />
-      <Route path="stepper-com" element={<StepperComp />} />
+      {/* <Route path="stepper-com" element={<StepperComp />} /> */}
       <Route path="*" element={<NotFound />} />
     </Route>
   )

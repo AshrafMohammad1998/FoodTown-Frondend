@@ -11,19 +11,18 @@ import MenuButton from "@mui/joy/MenuButton";
 import Menu from "@mui/joy/Menu";
 import MenuItem from "@mui/joy/MenuItem";
 import ArrowDropDown from "@mui/icons-material/ArrowDropDown";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import configVariables from "../../configurations/config";
 import Cookies from "js-cookie";
 import ThemeToggleButton from "./ThemeToggleButton";
 import { useSelector, useDispatch } from "react-redux";
-import {logout} from "../../store/userSlice"
+import { logout } from "../../store/userSlice";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
-  
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const jwtToken = Cookies.get("jwtToken");
   const uiTheme = useSelector((state) => state.uiTheme.theme);
@@ -55,9 +54,9 @@ function Header() {
           theme: "light",
         });
         Cookies.remove("jwtToken");
-        Cookies.remove("userId")
-        dispatch(logout())
-        
+        Cookies.remove("userId");
+        dispatch(logout());
+
         setTimeout(() => {
           navigate("/login");
         }, 1000);
@@ -73,30 +72,58 @@ function Header() {
       <nav className="flex items-center justify-between md:w-4/5 m-auto border border-slate-500 rounded-2xl text-sans w-11/12 bg-white dark:bg-slate-800 ">
         <img src={navImage} alt="" className="h-12 w-40 -ml-3" />
         <ul className="items-center space-x-6 hidden sm:flex">
-          <li className="flex items-center space-x-1">
-            <span className="mb-1">
-              <HouseOutlinedIcon fontSize="small" />
-            </span>
-            <span className="sm:hidden lg:inline">Home</span>
-          </li>
-          <li className="flex items-center space-x-1">
-            <span className="mb-1">
-              <LocalMallOutlinedIcon fontSize="small" />
-            </span>
-            <span className="sm:hidden lg:inline">Bag</span>
-          </li>
-          <li className="flex items-center space-x-1">
-            <span className="mb-1">
-              <FavoriteBorderOutlinedIcon fontSize="small" />
-            </span>
-            <span className="sm:hidden lg:inline">Wishlist</span>
-          </li>
-          <li className="flex items-center space-x-1">
-            <span className="mb-1">
-              <ContactMailOutlinedIcon fontSize="small" />
-            </span>
-            <span className="sm:hidden lg:inline">Contact Us</span>
-          </li>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
+            }
+          >
+            <li className="flex items-center space-x-1">
+              <span className="mb-1">
+                <HouseOutlinedIcon fontSize="small" />
+              </span>
+              <span className="sm:hidden lg:inline">Home</span>
+            </li>
+          </NavLink>
+          <NavLink
+            to="/bag"
+            className={({ isActive }) =>
+              `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
+            }
+          >
+            <li className="flex items-center space-x-1">
+              <span className="mb-1">
+                <LocalMallOutlinedIcon fontSize="small" />
+              </span>
+              <span className="sm:hidden lg:inline">Bag</span>
+            </li>
+          </NavLink>
+          <NavLink
+            to="wishlist"
+            className={({ isActive }) =>
+              `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
+            }
+          >
+            <li className="flex items-center space-x-1">
+              <span className="mb-1">
+                <FavoriteBorderOutlinedIcon fontSize="small" />
+              </span>
+              <span className="sm:hidden lg:inline">Wishlist</span>
+            </li>
+          </NavLink>
+          <NavLink
+            to="contact-us"
+            className={({ isActive }) =>
+              `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
+            }
+          >
+            <li className="flex items-center space-x-1">
+              <span className="mb-1">
+                <ContactMailOutlinedIcon fontSize="small" />
+              </span>
+              <span className="sm:hidden lg:inline">Contact Us</span>
+            </li>
+          </NavLink>
         </ul>
         {/* <p className="flex items-center space-x-1 mr-4">
           <span className="mb-1">
@@ -108,11 +135,11 @@ function Header() {
           <ThemeToggleButton />
           <Dropdown>
             <MenuButton
-              sx={{ minWidth: 60, padding: "2px", color:iconColor }}
+              sx={{ minWidth: 60, padding: "2px", color: iconColor }}
               style={{ marginRight: "10px" }}
               endDecorator={
                 <ArrowDropDown
-                  style={{ marginLeft: "-5px", color:iconColor }}
+                  style={{ marginLeft: "-5px", color: iconColor }}
                 />
               }
             >
@@ -123,20 +150,31 @@ function Header() {
             </MenuButton>
             <Menu
               placement="bottom-end"
-              sx={{ minWidth: 120, "--ListItemDecorator-size": "24px", backgroundColor:`${uiTheme === "dark" ? "#1e293b": "white"}`,  }}
+              sx={{
+                minWidth: 120,
+                "--ListItemDecorator-size": "24px",
+                backgroundColor: `${uiTheme === "dark" ? "#1e293b" : "white"}`,
+              }}
             >
               <MenuItem
-                sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}
+                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
                 onClick={() => {
                   handleLogout();
                 }}
                 className="bg-red-500"
               >
-                
                 Logout
               </MenuItem>
-              <MenuItem sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}>Edit</MenuItem>
-              <MenuItem sx={{color: `${uiTheme === "dark" ? "white": "black"}`}}>Help</MenuItem>
+              <MenuItem
+                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
+              >
+                Edit
+              </MenuItem>
+              <MenuItem
+                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
+              >
+                Help
+              </MenuItem>
             </Menu>
           </Dropdown>
         </div>
