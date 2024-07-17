@@ -220,7 +220,7 @@ function RestaurantDetails({ onBack, onNext }) {
                 onChange={(event) => handleFromTime(event)}
                 type="time"
                 id="startTime"
-                className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={fromTime}
               />
               {restaurantFormError.fromTimeError && (
@@ -242,7 +242,7 @@ function RestaurantDetails({ onBack, onNext }) {
                 onChange={(event) => handleToTime(event)}
                 type="time"
                 id="end-time"
-                className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 value={toTime}
               />
               {restaurantFormError.toTimeError && (
@@ -323,7 +323,7 @@ function RestaurantDetails({ onBack, onNext }) {
                   />
                   <label
                     htmlFor={item}
-                    className="ml-2 accent-teal-500 cursor-pointer "
+                    className="ml-2 accent-teal-500 cursor-pointer text-black"
                   >
                     {item}
                   </label>

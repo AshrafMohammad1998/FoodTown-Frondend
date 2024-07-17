@@ -12,22 +12,21 @@ import { loadBagData } from "../../store/bagSlice";
 function DishItem(props) {
   const { dish, restaurantId } = props;
   const jwtToken = Cookies.get("jwtToken");
-  
 
   const dispatch = useDispatch();
 
   const bag = useSelector((state) => state.bag?.bagData);
 
-  const bagDishes = bag?.map((each) => each.dishId);
+  const bagDishes = bag?.dishes?.map((each) => each.dishId);
 
   const [showAddButton, setShowAddButton] = useState(true);
   const [quantity, setQuantity] = useState(1);
 
-  const [handleAddButton, setHandleAddButton] = useState(true)
+  const [handleAddButton, setHandleAddButton] = useState(true);
 
   useEffect(() => {
     if (bagDishes?.includes(dish._id)) {
-      if (handleAddButton){
+      if (handleAddButton) {
         setShowAddButton(false);
       }
       setQuantity(findQuantity(dish._id));
@@ -35,84 +34,65 @@ function DishItem(props) {
   }, [bagDishes, dish._id]);
 
   const findQuantity = (dishId) => {
-    const dish = bag.find((each) => each.dishId === dishId);
+    const dish = bag?.dishes?.find((each) => each.dishId === dishId);
     return dish ? dish.quantity : 0;
   };
-
-  // const handleAddDishInBag = async (dishId) => {
-  //   const userId = Cookies.get("userId")
-  //   try {
-  //     const response = await axios.post(
-  //       `${configVariables.ipAddress}/bags/addBag/${restaurantId}`,
-  //       { dishId },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${jwtToken}`,
-  //         },
-  //         withCredentials: true,
-  //       }
-  //     );
-  //     if (response.status === 200) {
-  //       setShowAddButton(false);
-  //       dispatch(loadBagData());
-  //     }
-  //   } catch (error) {
-  //     console.log("Dish Item :: handleAddDishInBag :: Error:", error);
-  //   }
-  // };
 
   const handleAddDishInBag = async (dishId) => {
     const userId = Cookies.get("userId");
     try {
-        const response = await axios.get(
-            `${configVariables.ipAddress}/bags/checkBag/${userId}`,
-            {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-                withCredentials: true,
-            }
-        );
-
-        const { currentRestaurantId } = response.data.data;
-
-        if (currentRestaurantId && currentRestaurantId !== restaurantId) {
-          //TODO: popup for differant restaurant in bag
-            if (window.confirm("You have items in your bag from another restaurant. Do you want to clear them and add this dish?")) {
-                await axios.delete(
-                    `${configVariables.ipAddress}/bags/clearBag/${userId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${jwtToken}`,
-                        },
-                        withCredentials: true,
-                    }
-                );
-            } else {
-                return;
-            }
+      const response = await axios.get(
+        `${configVariables.ipAddress}/bags/checkBag/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          withCredentials: true,
         }
+      );
 
-        const addResponse = await axios.post(
-            `${configVariables.ipAddress}/bags/addBag/${restaurantId}`,
-            { dishId },
+      const { currentRestaurantId } = response.data.data;
+
+      if (currentRestaurantId && currentRestaurantId !== restaurantId) {
+        //TODO: popup for differant restaurant in bag
+        if (
+          window.confirm(
+            "You have items in your bag from another restaurant. Do you want to clear them and add this dish?"
+          )
+        ) {
+          await axios.delete(
+            `${configVariables.ipAddress}/bags/clearBag/${userId}`,
             {
-                headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                },
-                withCredentials: true,
+              headers: {
+                Authorization: `Bearer ${jwtToken}`,
+              },
+              withCredentials: true,
             }
-        );
-
-        if (addResponse.status === 200) {
-            setShowAddButton(false);
-            dispatch(loadBagData());
+          );
+        } else {
+          return;
         }
+      }
+
+      const addResponse = await axios.post(
+        `${configVariables.ipAddress}/bags/addBag/${restaurantId}`,
+        { dishId },
+        {
+          headers: {
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (addResponse.status === 200) {
+        setShowAddButton(false);
+        dispatch(loadBagData());
+      }
     } catch (error) {
-        console.log("Dish Item :: handleAddDishInBag :: Error:", error);
+      console.log("Dish Item :: handleAddDishInBag :: Error:", error);
     }
-};
-
+  };
 
   const increaseDishQuantity = async (dishId) => {
     try {
@@ -153,8 +133,9 @@ function DishItem(props) {
         if (
           !response.data?.data?.dishes?.some((dish) => dish.dishId === dishId)
         ) {
-          setHandleAddButton(false)
+          setHandleAddButton(false);
           setShowAddButton(true);
+          
         }
       }
     } catch (error) {
@@ -195,7 +176,7 @@ function DishItem(props) {
           </h1>
           <p className="flex items-center text-slate-800 dark:text-slate-300 text-xs md:text-md">
             <CurrencyRupeeIcon fontSize="small" />
-            {dish.amount}
+            {dish.amount}/-
           </p>
           <div className="flex items-center gap-1 font-semibold py-2">
             <StarsRoundedIcon fontSize="small" sx={{ color: "green" }} />

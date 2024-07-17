@@ -14,11 +14,11 @@ import PartnerOTP from "./PartnerOTP";
 function PartnerRegister() {
   const jwtToken = Cookies.get("jwtToken");
 
-  const [name, setName] = useState("as123");
-  const [email, setEmail] = useState("ashraf@gmail.com");
-  const [mobile, setMobile] = useState("474327895");
-  const [password, setPassword] = useState("Ashraf@123");
-  const [confirmPassword, setConfirmPassword] = useState("Ashraf@123");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

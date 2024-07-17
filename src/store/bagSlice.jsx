@@ -21,7 +21,7 @@ export const loadBagData = createAsyncThunk("loadBagData", async () => {
             withCredentials: true,
         }
     )
-    return response.data?.data?.dishes
+    return response.data?.data
 })
 
 const bagSlice = createSlice({
