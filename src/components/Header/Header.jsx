@@ -66,8 +66,10 @@ function Header() {
     }
   };
 
+  const bagData = useSelector((state) => state.bag.bagData);
+
   return (
-    <div className="min-w-screen sticky top-0 z-20 mb-4 bg-white dark:bg-slate-800">
+    <div className="min-w-screen sticky top-0 z-30 mb-4 bg-white dark:bg-slate-800">
       <ToastContainer />
       <nav className="flex items-center justify-between md:w-4/5 m-auto border border-slate-500 rounded-2xl text-sans w-11/12 bg-white dark:bg-slate-800 ">
         <img src={navImage} alt="" className="h-12 w-40 -ml-3" />
@@ -96,10 +98,15 @@ function Header() {
                 <LocalMallOutlinedIcon fontSize="small" />
               </span>
               <span className="sm:hidden lg:inline">Bag</span>
+              {bagData?.length > 0 && (
+                <p className="bg-cyan-300 rounded-full w-6 h-6 ml-1 text-center">
+                  {bagData?.length}
+                </p>
+              )}
             </li>
           </NavLink>
           <NavLink
-            to="wishlist"
+            to="/wishlist"
             className={({ isActive }) =>
               `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
             }
@@ -112,7 +119,7 @@ function Header() {
             </li>
           </NavLink>
           <NavLink
-            to="contact-us"
+            to="/contact-us"
             className={({ isActive }) =>
               `${isActive ? "text-cyan-400 border-b-2 border-b-cyan-400" : ""}`
             }

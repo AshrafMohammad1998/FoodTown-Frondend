@@ -23,7 +23,7 @@ function Footer() {
           </li>
         </NavLink>
         <NavLink
-          to="bag"
+          to="/bag"
           className={({ isActive }) =>
             `${isActive ? "text-cyan-400" : ""}`
           }
@@ -36,7 +36,7 @@ function Footer() {
           </li>
         </NavLink>
         <NavLink
-          to="wishlist"
+          to="/wishlist"
           className={({ isActive }) =>
             `${isActive ? "text-cyan-400" : ""}`
           }
@@ -49,7 +49,7 @@ function Footer() {
           </li>
         </NavLink>
         <NavLink
-          to="contact-us"
+          to="/contact-us"
           className={({ isActive }) =>
             `${isActive ? "text-cyan-400" : ""}`
           }

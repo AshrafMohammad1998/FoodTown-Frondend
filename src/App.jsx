@@ -11,6 +11,7 @@ import configVariables from "./configurations/config";
 import PartnerHeader from "./components/Header/PartnerHeader";
 import PartnerFooter from "./components/Footer/PartnerFooter";
 import { loadRestaurantData } from "./store/restaurantSlice";
+import { loadBagData } from "./store/bagSlice";
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,8 @@ function App() {
               const restaurantData = restaurantResponse.data.data;
               dispatch(loadRestaurantData(restaurantData));
             }
+          }else {
+            dispatch(loadBagData());
           }
         }
       } catch (error) {
