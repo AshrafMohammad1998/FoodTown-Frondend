@@ -145,9 +145,9 @@ function PartnerOTP({ onBack, email, name, mobile, password }) {
         Verify your OTP
       </h1>
       <form onSubmit={verifyOTP} className="text-center">
-        <p className="text-sm ">
+        <p className="text-sm text-black">
           {" "}
-          OTP will be sent to <b>{email}</b>
+          OTP sent to <b>{email}</b>
         </p>
 
         {!showOTP && (
@@ -206,7 +206,9 @@ function PartnerOTP({ onBack, email, name, mobile, password }) {
             </div>
           </div>
         )}
-
+        {showOTP &&
+        <p onClick={sendOtp} className="mb-1 cursor-pointer text-blue-800 underline">Resend OTP</p>
+        }
         {/* <Button
           variant="outlined"
           color="neutral"

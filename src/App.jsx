@@ -11,12 +11,12 @@ import configVariables from "./configurations/config";
 import PartnerHeader from "./components/Header/PartnerHeader";
 import PartnerFooter from "./components/Footer/PartnerFooter";
 import { loadRestaurantData } from "./store/restaurantSlice";
-import { loadBagData } from "./store/bagSlice";
+import { loadBagData } from "./store/bagSlice.js";
 
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const pathsToHide = ["/login", "/register", "/partner-registration"];
+  const pathsToHide = ["/login", "/register", "/partner-registration","/payment-success", "/payment-failure"];
   const hidingThePaths = pathsToHide.includes(location.pathname);
 
   const showPartnerHeaderFooter = location.pathname.startsWith("/partner");

@@ -26,6 +26,7 @@ import PartnerOrders from "./components/Partner/PartnerOrders.jsx";
 import Restaurant from "./components/Restaurant/Restaurant.jsx";
 import PaymentSuccess from "./components/Payment/PaymentSuccess.jsx";
 import PaymentFailure from "./components/Payment/PaymentFailure.jsx";
+import UserProfile from "./components/Profile/UserProfile.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -67,7 +68,7 @@ const router = createBrowserRouter(
       />
 
       <Route
-        path="/restaurants/:restaurantId"
+        path="restaurants/:restaurantId"
         element={
           <ProtectedRoute>
             <Restaurant />
@@ -116,6 +117,15 @@ const router = createBrowserRouter(
         element={
           <ProtectedRoute>
             <PaymentFailure />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="my-profile"
+        element={
+          <ProtectedRoute>
+            <UserProfile />
           </ProtectedRoute>
         }
       />

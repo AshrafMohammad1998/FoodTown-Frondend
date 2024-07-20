@@ -78,8 +78,6 @@ function Login() {
           expires: 1,
         });
 
-        console.log(response, "user login res");
-
         const isOwner = response.data.data.loggedInUser.isOwner;
 
         console.log(isOwner, "isOwner");

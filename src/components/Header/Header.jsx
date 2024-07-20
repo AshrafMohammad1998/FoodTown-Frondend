@@ -168,16 +168,19 @@ function Header() {
               <MenuItem
                 sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
                 onClick={() => {
+                  navigate("/my-profile")
+                }}
+              >
+                Profile
+              </MenuItem>
+              <MenuItem
+                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
+                onClick={() => {
                   handleLogout();
                 }}
                 className="bg-red-500"
               >
                 Logout
-              </MenuItem>
-              <MenuItem
-                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
-              >
-                Edit
               </MenuItem>
               <MenuItem
                 sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}

@@ -1,20 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import Cookies from "js-cookie";
 import configVariables from "../../configurations/config";
 import DishItem from "../Restaurant/DishItem";
 import { loadStripe } from "@stripe/stripe-js";
+import EmptyBag from "../../../public/grocery-icon.png";
+import { useNavigate } from "react-router-dom";
+import { loadBagData } from "../../store/bagSlice";
+
 
 function Bag() {
   const [bagDishes, setBagDishes] = useState([]);
   const bagData = useSelector((state) => state.bag?.bagData);
   const bagDataDishIds = bagData?.dishes?.map((each) => each.dishId.toString());
   const [orderAmount, setOrderAmount] = useState(0);
+  const dispatch = useDispatch()
 
   const restaurantId = bagData?.restaurantId;
 
   const jwtToken = Cookies.get("jwtToken");
+  const userId = Cookies.get("userId");
+
+  const navigate = useNavigate();
 
   const fetchBagDishes = async () => {
     try {
@@ -59,48 +67,77 @@ function Bag() {
     setOrderAmount(total);
   }, [bagData, bagDishes]);
 
-  const mergedDishesArray = bagData?.dishes?.map(bag => {
-    const dish = bagDishes.find(d => d._id === bag.dishId);
-    return dish ? { ...dish, quantity: bag.quantity } : null;
-}).filter(item => item !== null);
+  const mergedDishesArray = bagData?.dishes
+    ?.map((bag) => {
+      const dish = bagDishes.find((d) => d._id === bag.dishId);
+      return dish ? { ...dish, quantity: bag.quantity } : null;
+    })
+    .filter((item) => item !== null);
 
-
-
-const handlePayment = async () => {
-  const stripe = await loadStripe(
-    "pk_test_51PdWFYRwEJZJNhqy6VqxpOvtxLRv4SnR4mmuHChyGpi9m46AFoADcZwQ6YlEIQJ2K7m6qDIE0OCykYDLUrxAD2DR00bydqYyHI"
-  );
-  try {
-    console.log(mergedDishesArray, "mergedArray");
-    const response = await axios.post(
-      `${configVariables.ipAddress}/bags/create-checkout`,
-      { mergedDishesArray },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwtToken}`,
-        },
-        withCredentials: true,
-      }
+  const handlePayment = async () => {
+    const stripe = await loadStripe(
+      "pk_test_51PdWFYRwEJZJNhqy6VqxpOvtxLRv4SnR4mmuHChyGpi9m46AFoADcZwQ6YlEIQJ2K7m6qDIE0OCykYDLUrxAD2DR00bydqYyHI"
     );
+    try {
+      console.log(mergedDishesArray, "mergedArray");
+      const response = await axios.post(
+        `${configVariables.ipAddress}/bags/create-checkout`,
+        { mergedDishesArray },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          withCredentials: true,
+        }
+      );
 
-    console.log(response);
+      const result = await stripe.redirectToCheckout({
+        sessionId: response.data.id, // Access session ID from response.data
+      });
 
-    const result = await stripe.redirectToCheckout({
-      sessionId: response.data.id,  // Access session ID from response.data
-    });
-
-    if (result.error) {
-      console.error(result.error.message);
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    } catch (error) {
+      console.log("Bag :: Handle Payment :: Error:", error);
     }
-  } catch (error) {
-    console.log("Bag :: Handle Payment :: Error:", error);
-  }
-};
+  };
 
+  const handleClearBag = async () => {
+    try {
+      const response = await axios.delete(
+        `${configVariables.ipAddress}/bags/clearBag/${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
+          },
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200){
+        dispatch(loadBagData())
+      }
+    } catch (error) {
+      console.log("Bag :: Handle clear bag :: Error: ", error);
+    }
+  };
 
   return (
     <div className="px-2 pb-8 mb-12 sm:mb-0 ">
+      {bagData && (
+        <div className="flex justify-between items-center bg-white dark:bg-slate-800 w-[90%] md:w-4/5 m-auto">
+          <h1 className="font-bold text-lg underline">Your Bag</h1>
+          <button
+            onClick={handleClearBag}
+            className="text-red-500 text-sm sm:text-md text-end self-end font-bold underline mb-1"
+          >
+            Clear Bag
+          </button>
+        </div>
+      )}
       <ul className="bg-white dark:bg-slate-800 w-[90%] md:w-4/5 m-auto divide-y divide-slate-400">
         {bagData ? (
           bagDishes.map((eachDish, index) => (
@@ -111,7 +148,21 @@ const handlePayment = async () => {
             />
           ))
         ) : (
-          <h1>No dishes found in your bag...</h1>
+          <div className="flex flex-col items-center justify-center mt-10">
+            <img src={EmptyBag} className="h-60 w-50" alt="payment Success" />
+            <h1 className="mt-5 font-bold text-3xl text-cyan-400">
+              Your Bag is Empty!
+            </h1>
+            <p className="mt-2 ">
+              You can go to home page to view more restaurants
+            </p>
+            <button
+              onClick={() => navigate("/")}
+              className="border border-slate-500 px-3 py-2 mt-2 rounded-lg"
+            >
+              Home
+            </button>
+          </div>
         )}
       </ul>
       {bagData && (
@@ -141,9 +192,12 @@ const handlePayment = async () => {
             <p className="w-1/4 ml-4">{`Rs ${orderAmount}/-`}</p>
           </div>
           <div className="w-full flex justify-end">
-          <button className="px-3 py-2 border border-slate-500 rounded-xl" onClick={handlePayment}>
-            Pay now
-          </button>
+            <button
+              className="px-3 py-2 border border-slate-500 rounded-xl"
+              onClick={handlePayment}
+            >
+              Pay now
+            </button>
           </div>
         </div>
       )}
