@@ -6,11 +6,13 @@ import configVariables from "../../configurations/config";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
 import RestaurantCard from "../Restaurant/RestaurantCard";
+import RestaurantCardSkeleton from "../skeletons/RestaurantCardSkeleton.jsx";
 
 function Home() {
   const [page, setPage] = useState(1);
   const [restaurants, setRestaurants] = useState([]);
   const jwtToken = Cookies.get("jwtToken");
+  const [isLoading, setIsLoading] = useState(true);
   // TODO: Add no retaurant case too
 
   const getRestaurants = async () => {
@@ -26,6 +28,7 @@ function Home() {
       );
 
       if (page === 1) {
+        setIsLoading(false)
         setRestaurants(response.data.data);
       } else {
         setRestaurants((prevData) => [...prevData, ...response.data.data]);
@@ -59,17 +62,25 @@ function Home() {
   }, []);
 
   return (
-    <div className="px-10 pb-8 mb-12 sm:mb-0 ">
+    <div className="px-10 pb-8 mb-12 sm:mb-0">
       <ToastContainer />
       <h1 className="text-center mb-4 text-xl font-bold underline tracking-wide">
         Restaurants
       </h1>
-      <div className="mx-auto w-[90%] md:w-4/5 flex justify-center md:justify-start flex-wrap gap-4">
-        {restaurants.map((restaurant) => (
-          <Link key={restaurant._id} to={`/restaurants/${restaurant._id}`}>
-            <RestaurantCard key={restaurant._id} restaurant={restaurant} />
-          </Link>
-        ))}
+      <div className="ml-auto w-[90%] md:w-4/5 md:mx-auto  flex flex-wrap gap-4">
+        {isLoading
+          ? new Array(8).fill("").map((each, index) => (
+              <div
+                key={index}
+              >
+                <RestaurantCardSkeleton />
+              </div>
+            ))
+          : restaurants.map((restaurant) => (
+              <Link key={restaurant._id} to={`/restaurants/${restaurant._id}`}>
+                <RestaurantCard key={restaurant._id} restaurant={restaurant} />
+              </Link>
+            ))}
       </div>
     </div>
   );

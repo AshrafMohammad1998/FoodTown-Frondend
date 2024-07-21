@@ -135,7 +135,6 @@ function DishItem(props) {
         ) {
           setHandleAddButton(false);
           setShowAddButton(true);
-          
         }
       }
     } catch (error) {

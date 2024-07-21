@@ -80,8 +80,6 @@ function Login() {
 
         const isOwner = response.data.data.loggedInUser.isOwner;
 
-        console.log(isOwner, "isOwner");
-
         setTimeout(() => {
           if (isOwner) {
             navigate("/partner-menu");
