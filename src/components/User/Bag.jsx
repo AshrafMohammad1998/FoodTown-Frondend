@@ -6,16 +6,16 @@ import configVariables from "../../configurations/config";
 import DishItem from "../Restaurant/DishItem";
 import { loadStripe } from "@stripe/stripe-js";
 import EmptyBag from "../../../public/grocery-icon.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loadBagData } from "../../store/bagSlice";
-
 
 function Bag() {
   const [bagDishes, setBagDishes] = useState([]);
   const bagData = useSelector((state) => state.bag?.bagData);
   const bagDataDishIds = bagData?.dishes?.map((each) => each.dishId.toString());
   const [orderAmount, setOrderAmount] = useState(0);
-  const dispatch = useDispatch()
+  const userData = useSelector((state) => state.user?.userData);
+  const dispatch = useDispatch();
 
   const restaurantId = bagData?.restaurantId;
 
@@ -117,8 +117,8 @@ function Bag() {
         }
       );
 
-      if (response.status === 200){
-        dispatch(loadBagData())
+      if (response.status === 200) {
+        dispatch(loadBagData());
       }
     } catch (error) {
       console.log("Bag :: Handle clear bag :: Error: ", error);
@@ -165,6 +165,29 @@ function Bag() {
           </div>
         )}
       </ul>
+      {bagData &&
+        (userData.address ? (
+          <div className="flex items-center justify-between w-[90%] md:w-4/5 m-auto border border-dashed border-slate-500 shadow-lg rounded-xl p-2 mb-2">
+            <p >
+              <span className="font-bold">Deliver to: </span>
+              {userData.address}
+            </p>
+            <Link to="/my-profile">
+            <button className="text-red-500 text-sm sm:text-md text-end self-end font-bold underline">
+              Change address
+            </button>
+            </Link>
+          </div>
+        ) : (
+          <div className="text-center">
+            <Link to="/my-profile">
+              <button className="border border-slate-500 shadow-lg rounded-xl p-2 text-red-500 font-bold">
+                Add address
+              </button>
+              <p className="text-red-500 mb-2">*Address is mandatory</p>
+            </Link>
+          </div>
+        ))}
       {bagData && (
         <div className="w-[90%] md:w-4/5 m-auto border border-slate-500 shadow-lg rounded-xl p-2">
           <h3 className="text-md">Payment Summary</h3>
@@ -193,6 +216,7 @@ function Bag() {
           </div>
           <div className="w-full flex justify-end">
             <button
+              disabled={!userData.address}
               className="px-3 py-2 border border-slate-500 rounded-xl"
               onClick={handlePayment}
             >

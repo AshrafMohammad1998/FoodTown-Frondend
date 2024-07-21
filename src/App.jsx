@@ -16,7 +16,7 @@ import { loadBagData } from "./store/bagSlice.js";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const pathsToHide = ["/login", "/register", "/partner-registration","/payment-success", "/payment-failure"];
+  const pathsToHide = ["/login", "/register", "/partner-registration","/payment-success", "/payment-failure","/reset-password"];
   const hidingThePaths = pathsToHide.includes(location.pathname);
 
   const showPartnerHeaderFooter = location.pathname.startsWith("/partner");

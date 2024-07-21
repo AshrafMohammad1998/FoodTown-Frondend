@@ -134,12 +134,6 @@ function Header() {
             </li>
           </NavLink>
         </ul>
-        {/* <p className="flex items-center space-x-1 mr-4">
-          <span className="mb-1">
-            <AccountCircleOutlinedIcon fontSize="small" />
-          </span>
-          <span>Account</span>
-        </p> */}
         <div className="flex items-center justify-around md:w-2/6 lg:w-1/4 space-x-4">
           <ThemeToggleButton />
           <Dropdown>
@@ -181,11 +175,6 @@ function Header() {
                 className="bg-red-500"
               >
                 Logout
-              </MenuItem>
-              <MenuItem
-                sx={{ color: `${uiTheme === "dark" ? "white" : "black"}` }}
-              >
-                Help
               </MenuItem>
             </Menu>
           </Dropdown>

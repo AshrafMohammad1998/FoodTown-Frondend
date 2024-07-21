@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useId} from "react";
 import { useNavigate } from "react-router-dom";
 
 function OrderItem(props) {
@@ -26,7 +26,7 @@ function OrderItem(props) {
   };
 
   return (
-    <div className="border border-slate-300 rounded-2xl shadow-xl w-[90%] md:w-3/4 m-auto mt-4 ">
+    <div className="border border-slate-300 rounded-2xl shadow-xl w-[90%] md:w-3/4 m-auto mt-4">
       <div className="flex justify-between w-full bg-slate-100 rounded-t-2xl text-black dark:text-slate-500 p-2 sm:p-4">
 
         <div className="h-16 w-16 sm:h-28 sm:w-28 mr-3">
@@ -59,7 +59,7 @@ function OrderItem(props) {
         {order?.dishes?.length > 0 && (
           <ul className="w-full p-2 sm:p-4">
             {order.dishes.map((eachDish) => (
-              <li key={eachDish.dishId} className="flex w-full ">
+              <li  key={useId()} className="flex w-full ">
                 <p className="text-slate-400 font-bold">{eachDish.quantity} x </p>
                 <p className="ml-2 truncate text-sm sm:text-lg">{eachDish.dishDetails.dishName}</p>
               </li>

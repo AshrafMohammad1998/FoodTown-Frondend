@@ -27,6 +27,7 @@ import Restaurant from "./components/Restaurant/Restaurant.jsx";
 import PaymentSuccess from "./components/Payment/PaymentSuccess.jsx";
 import PaymentFailure from "./components/Payment/PaymentFailure.jsx";
 import UserProfile from "./components/Profile/UserProfile.jsx";
+import ResetPassword from "./components/authentication/ResetPassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -130,9 +131,19 @@ const router = createBrowserRouter(
         }
       />
 
+      <Route
+        path="partner-profile"
+        element={
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        }
+      />
+
       <Route path="login" element={<Login />} />
       <Route path="register" element={<Register />} />
       <Route path="partner-registration" element={<PartnerRegister />} />
+      <Route path="reset-password" element={<ResetPassword />} />
       {/* <Route path="stepper-com" element={<StepperComp />} /> */}
       <Route path="*" element={<NotFound />} />
     </Route>

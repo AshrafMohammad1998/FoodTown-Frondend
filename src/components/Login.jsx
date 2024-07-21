@@ -187,6 +187,12 @@ function Login() {
                     </div>
                   </div>
                 </div>
+                <Link
+                    className="text-blue-800 underline pt-2 pl-1"
+                    to="/reset-password"
+                  >
+                    Forgot Password?
+                  </Link>
                 {formError.passwordError && (
                   <span className="text-red-500 text-xs md:text-sm">
                     *Password is mandatory
