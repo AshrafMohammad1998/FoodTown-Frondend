@@ -101,7 +101,7 @@ function Menu() {
               </div>
 
               <div className="ml-3 relative w-3/5 sm:w-3/4 ">
-                <h1 className="text-black dark:text-white text-xs md:text-lg font-bold ">
+              <h1 className="text-black dark:text-white text-md sm:text-lg font-bold ">
                   {dish.dishName}
                 </h1>
                 <div className="flex my-1">
@@ -125,7 +125,7 @@ function Menu() {
                   )}
                 </div>
 
-                <p className="text-slate-600 dark:text-slate-300 text-xs md:text-sm">
+                <p className="text-slate-600 dark:text-slate-300 sm:text-sm w-2/3 md:w-3/4 line-clamp-2 hidden sm:block">
                   {dish.description}
                 </p>
                 <div className="absolute bottom-1 right-1">
